@@ -1,0 +1,192 @@
+<div class="jumbotron">
+  <p class="lead">
+    <img class="logo" src="images/logo.png" alt="Pharos"><br>
+    Distributed Docker Monitoring Tool
+  </p>
+</div>
+
+<div ng-repeat="container in containers">
+  <div ng-model="tabs.activeTab" bs-tabs>
+    <div ng-repeat="data in container" title="{{ data.hostname }}" bs-pane>
+      <ul>
+        <li>hostname: {{data.hostname}}</li>
+        <li>cpu_percent: {{data.metrics[0]}}</li>
+        <li>cpu_times_user: {{data.metrics[1]}}</li>
+        <li>cpu_times_system: {{data.metrics[2]}}</li>
+        <li>memory_percent: {{data.metrics[3]}}</li>
+        <li>memory_rss: {{data.metrics[4]}}</li>
+        <li>memory_vms: {{data.metrics[5]}}</li>
+        <li>io_counter_read: {{data.metrics[6]}}</li>
+        <li>io_counter_write: {{data.metrics[7]}}</li>
+        <li>network_recv_bytes: {{data.metrics[8]}}</li>
+      </ul>
+  <div ng-model="tabs.activeTab" bs-tabs>
+    <div ng-repeat="process in data.processes" title="{{ process.exe }}" bs-pane>
+      <h5>
+        <span ng-repeat="cmd in process.cmdline">
+          {{cmd}}
+        </span>
+      </h5>
+      <ul>
+        <li>pid: {{process.pid}}</li>
+        <li>cpu_percent: {{process.metrics[0]}}</li>
+        <li>cpu_times_user: {{process.metrics[1]}}</li>
+        <li>cpu_times_system: {{process.metrics[2]}}</li>
+        <li>memory_percent: {{process.metrics[3]}}</li>
+        <li>memory_rss: {{process.metrics[4]}}</li>
+        <li>memory_vms: {{process.metrics[5]}}</li>
+        <li>io_counter_read: {{process.metrics[6]}}</li>
+        <li>network_recv_bytes: {{process.metrics[8]}}</li>
+        <li>io_counter_write: {{process.metrics[7]}}</li>
+        <li>network_send_bytes: {{process.metrics[9]}}</li>
+      </ul>
+      <div class="panel-group" ng-model="panels.activePanel" bs-collapse>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a bs-collapse-toggle>
+                Detail data
+              </a>
+            </h4>
+          </div>
+          <div class="panel-collapse" bs-collapse-target>
+            <div class="panel-body">
+              <pre>{{ process | json }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Continaers <a class="btn btn-xs btn-success" ng-click="requestContainer()">Request</a></div>
+  <div class="panel-body">
+    <ul class="list-group" ng-repeat="container in containers">
+      <!-- <h5>{{container.Name}}({{container.NetworkSettings}})</h5>
+      <pre>{{ container | json }}</pre> -->
+      <div class="list-group-item" ng-repeat="data in container">
+        hostname: {{data.hostname}}<br>
+        cpu_percent: {{data.metrics[0]}}<br>
+        cpu_times_user: {{data.metrics[1]}}<br>
+        cpu_times_system: {{data.metrics[2]}}<br>
+        memory_percent: {{data.metrics[3]}}<br>
+        memory_rss: {{data.metrics[4]}}<br>
+        memory_vms: {{data.metrics[5]}}<br>
+        io_counter_read: {{data.metrics[6]}}<br>
+        io_counter_write: {{data.metrics[7]}}<br>
+        network_recv_bytes: {{data.metrics[8]}}<br>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">Processes</div>
+          <div class="panel-body">
+            <div ng-model="tabs.activeTab" bs-tabs>
+              <div ng-repeat="process in data.processes" title="{{ process.exe }}" bs-pane>
+                <h5>
+                  <span ng-repeat="cmd in process.cmdline">
+                    {{cmd}}
+                  </span>
+                </h5>
+                <ul>
+                  <li>pid: {{process.pid}}</li>
+                  <li>cpu_percent: {{process.metrics[0]}}</li>
+                  <li>cpu_times_user: {{process.metrics[1]}}</li>
+                  <li>cpu_times_system: {{process.metrics[2]}}</li>
+                  <li>memory_percent: {{process.metrics[3]}}</li>
+                  <li>memory_rss: {{process.metrics[4]}}</li>
+                  <li>memory_vms: {{process.metrics[5]}}</li>
+                  <li>io_counter_read: {{process.metrics[6]}}</li>
+                  <li>network_recv_bytes: {{process.metrics[8]}}</li>
+                  <li>io_counter_write: {{process.metrics[7]}}</li>
+                  <li>network_send_bytes: {{process.metrics[9]}}</li>
+                </ul>
+                <div class="panel-group" ng-model="panels.activePanel" bs-collapse>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a bs-collapse-toggle>
+                          Detail data
+                        </a>
+                      </h4>
+                    </div>
+                    <div class="panel-collapse" bs-collapse-target>
+                      <div class="panel-body">
+                        <pre>{{ process | json }}</pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </ul>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Docker node <a class="btn btn-xs btn-success" ng-click="requestNode()">Request node</a></div>
+  <div class="panel-body">
+    <h5>Nodes</h5>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="node in nodes.nodes">
+        {{node.host}} (ID: {{node._id}}, Container: {{node.containers}})
+        <a class="btn btn-xs btn-info" ng-click="requestNodeData(node.host)">Request data<span class="glyphicon glyphicon-ok"></span></a>
+
+      </li>
+    </ul>
+    <h5>Containers</h5>
+    <ul class="list-group" ng-repeat="containers in nodeData.containers">
+      <li class="list-group-item">
+        <ul class="list-group" ng-repeat="container in containers">
+          <li class="list-group-item">
+            network_send_bytes: {{container.metrics[9]}}<br>
+            network_recv_bytes: {{container.metrics[8]}}<br>
+            io_counter_write: {{container.metrics[7]}}<br>
+            io_counter_read: {{container.metrics[6]}}<br>
+            memory_vms: {{container.metrics[5]}}<br>
+            memory_rss: {{container.metrics[4]}}<br>
+            memory_percent: {{container.metrics[3]}}<br>
+            cpu_times_system: {{container.metrics[2]}}<br>
+            cpu_times_user: {{container.metrics[1]}}<br>
+            cpu_percent: {{container.metrics[0]}}<br>
+          </li>
+          <pre>{{ container | json }}</pre>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- <div class="panel panel-default">
+  <div class="panel-heading">Node data</div>
+  <div class="panel-body">
+    <li ng-repeat="container in containers.nodeData">
+      {{container._id}} : {{container.containers}} : {{container.host}}
+      <a class="btn btn-info" ng-click="requestNodeData(node.host)">Request host contianer data<span class="glyphicon glyphicon-ok"></span></a>
+    </li>
+  </div>
+</div> -->
+<!--
+<div class="panel panel-default">
+  <div class="panel-heading">Container</div>
+  <div class="panel-body">
+    <p><a class="btn btn-lg btn-success" ng-click="requestContinaer()">Request container<span class="glyphicon glyphicon-ok"></span></a></p>
+    <pre>{{ containers | json }}</pre>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Panel heading without title</div>
+  <div class="panel-body">
+    <p><a class="btn btn-lg btn-success" ng-click="requestContinaerName('test')">Request node<span class="glyphicon glyphicon-ok"></span></a></p>
+    <pre>{{ node | json }}</pre>
+  </div>
+</div>
+ -->
