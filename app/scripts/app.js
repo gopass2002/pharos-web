@@ -21,8 +21,7 @@ angular
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/dashboard.html',
-        controller: 'DashboardCtrl'
+        redirectTo: '/dashboard'
       })
       .when('/about', {
         templateUrl: 'views/about.html',

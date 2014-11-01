@@ -106,3 +106,9 @@ body {
   border-top: none;
   padding: 10px;
 }
+.container .jumbotron, .container-fluid .jumbotron{
+  padding-bottom: 0;
+}
+.container-fluid .navbar-brand{
+  color: white !important;
+}

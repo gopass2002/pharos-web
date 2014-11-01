@@ -29,20 +29,24 @@ angular.module('pharosWebApp')
       });
     };
     $scope.requestContinaerName = function(containerName){
-      $log.info('reqeustContainer', containerName);
+      $log.info('reqeustContainerName', containerName);
       api.container(containerName, function(data){
         $scope.container = data;
       });
     };
     $scope.requestContinaerId = function(containerId){
-      $log.info('reqeustContainer', containerId);
+      $log.info('reqeustContainerId', containerId);
       api.container(containerId, function(data){
         $scope.nodeData = data;
       });
     };
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    $scope.init = function(){
+      api.container(function(data){
+        $scope.containers = data;
+      });
+      api.node(function(data){
+        $scope.nodes = data;
+      });
+    };
+    $scope.init();
   }]);
